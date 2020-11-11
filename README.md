@@ -10,6 +10,7 @@ python3 cifar_copy.py --dataset cifar10 --epochs 300 --schedule 150 225 --gamma 
 
 mkdir models
   /cifar/res_copy.py
+        /__pycache__/res_copy.cpythoon-36.pyc ??
 
 Docker image
 Attention Branch Network
