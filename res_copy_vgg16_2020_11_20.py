@@ -2,6 +2,8 @@
 #run day 2020/11/14
 #https://axa.biopapyrus.jp/deep-learning/pytorch/pytorch-vgg16.html 参考サイト
 #VGG7ぐらいにしたけどエラー何だっけ
+#RuntimeError: Given groups=1, weight of size [256, 256, 3, 3], expected input[13, 512, 1, 1] to have 256 channels, but got 512 channels instead
+#Total params: 30.75M
 #cifar_copyの44行目らへんのbatchsizeとかlearning-rateとか変えているので注意
 #160行目付近のmodel.load_state_dict(torch.load(PATH), strict=False)
 
