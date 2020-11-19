@@ -6,7 +6,7 @@
 #Total params: 30.75M
 #cifar_copyの44行目らへんのbatchsizeとかlearning-rateとか変えているので注意
 #160行目付近のmodel.load_state_dict(torch.load(PATH), strict=False)
-
+#あと画像の入力サイズもネットワークによって合わせるように
 
 import torch.nn as nn
 import torch.nn.functional as F
