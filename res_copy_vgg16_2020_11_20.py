@@ -1,6 +1,9 @@
 #res_copy.py
 #run day 2020/11/14
-#https://axa.biopapyrus.jp/deep-learning/pytorch/pytorch-vgg16.html
+#https://axa.biopapyrus.jp/deep-learning/pytorch/pytorch-vgg16.html 参考サイト
+#VGG7ぐらいにしたけどエラー何だっけ
+#cifar_copyの44行目らへんのbatchsizeとかlearning-rateとか変えているので注意
+#160行目付近のmodel.load_state_dict(torch.load(PATH), strict=False)
 
 
 import torch.nn as nn
@@ -53,7 +56,7 @@ class Net(nn.Module):
                                         )
 
         self.fc0 = nn.Linear(256*23*23, 10)##直し忘れに気をつけて
-        self.fc1 = nn.Linear(256*23*23, 10)##
+        self.fc1 = nn.Linear(256*23*23, 10)##ここはFinal PerceptionのFC層なので
         self.fc2 = nn.Linear(256*23*23, 10)##
         self.fc3 = nn.Linear(256*23*23, 10)##
         self.softmax = nn.Softmax(dim=1)
