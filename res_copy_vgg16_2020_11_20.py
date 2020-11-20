@@ -59,7 +59,7 @@ class Net(nn.Module):
 
         self.fc0 = nn.Linear(256*23*23, 10)##直し忘れに気をつけて
         self.fc1 = nn.Linear(256*23*23, 10)##ここはFinal PerceptionのFC層なので
-        self.fc2 = nn.Linear(256*23*23, 10)##
+        self.fc2 = nn.Linear(256*23*23, 10)##最後の，データセットのクラス数
         self.fc3 = nn.Linear(256*23*23, 10)##
         self.softmax = nn.Softmax(dim=1)
 
