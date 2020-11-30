@@ -236,6 +236,41 @@ def main():
     print('Best acc:')
     print(best_acc)
 
+#提案手法用
+#####################################################
+def crop_center(pil_img, crop_width, crop_height):
+    img_width, img_height = pil_img.size
+    return pil_img.crop(((img_width - crop_width) // 2,
+                         (img_height - crop_height) // 2,
+                         (img_width + crop_width) // 2,
+                         (img_height + crop_height) // 2))
+
+def crop_raster(pil_img, canv_size, step_size):
+  width, height = pil_img.size
+  x = y = canv_size
+  x_step = y_step = step_size
+  x0 = 0
+  y0 = 0
+  j = 0
+
+  # 縦方向の走査を行うループ
+  while y + (j * y_step) <= height:
+    i = 0                   # 横方向の走査が終わる度にiを初期化
+    ys = y0 + (j * y_step)  # 高さ方向の始点位置を更新
+    yf = y + (j * y_step)   # 高さ方向の終点位置を更新
+
+    # 横方向の走査をするループ
+    while x + (i * x_step) <= width:
+      # ここからが領域に対する画像処理
+      crop_image = pil_img.crop((i * x_step, ys, x + (i * x_step), yf))
+      #plt.figure()
+      #plt.imshow(crop_image)
+      # ここまでが領域に対する画像処理
+
+      i = i + 1   # whileループの条件がFalse（横方向の端になる）まで、iを増分
+    j = j + 1       # whileループの条件がFalse（縦方向の端になる）まで、jを増分
+##################################################################
+
 def train(trainloader, model, criterion, optimizer, epoch, use_cuda):
     # switch to train mode
     model.train()
