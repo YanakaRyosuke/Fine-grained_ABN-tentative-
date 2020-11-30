@@ -90,7 +90,10 @@ else:
     save_attention_map = False
 
 # Validate dataset
+"""
+#############################################
 assert args.dataset == 'cifar10' or args.dataset == 'cifar100', 'Dataset can only be cifar10 or cifar100.'
+"""
 
 # Use CUDA
 os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_id
@@ -126,31 +129,45 @@ def main():
     # Data
     print('==> Preparing dataset %s' % args.dataset)
     transform_train = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
+        transforms.Resize((256, 256)),
         transforms.ToTensor(),
         #transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
         transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)),
     ])
 
     transform_test = transforms.Compose([
+        transforms.Resize((256, 256)),
         transforms.ToTensor(),
         #transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
         transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)),
     ])
+    """
     if args.dataset == 'cifar10':
         dataloader = datasets.CIFAR10
         num_classes = 10
     else:
         dataloader = datasets.CIFAR100
         num_classes = 100
+    """
+    bird_dataset = datasets.ImageFolder(root = "./",
+                                    transform=data_transform)
+###################################################
+    n_train = int(len(bird_dataset) * 0.6)
+    n_val = len(bird_dataset) *2
+    n_test = len(bird_dataset) - n_train - n_val
+    
+    trainset, valset, testset = torch.utils.data.random_split(
+        bird_dataset,
+        [n_train, n_val, n_test]
+    )
+###################################################
+    #trainset = dataloader(root='./data', train=True, download=True, transform=transform_train)
+    #trainloader = data.DataLoader(trainset, batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size, shuffle=True)
 
-
-    trainset = dataloader(root='./data', train=True, download=True, transform=transform_train)
-    trainloader = data.DataLoader(trainset, batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
-
-    testset = dataloader(root='./data', train=False, download=False, transform=transform_test)
-    testloader = data.DataLoader(testset, batch_size=args.test_batch, shuffle=False, num_workers=args.workers)
+    #testset = dataloader(root='./data', train=False, download=False, transform=transform_test)
+    #testloader = data.DataLoader(testset, batch_size=args.test_batch, shuffle=False, num_workers=args.workers)
+    test_loader = torch.utils.data.DataLoader(testset, batch_size)
 
     # Model
     print("==> creating model '{}'".format(args.arch))
