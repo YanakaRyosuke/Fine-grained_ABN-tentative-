@@ -240,10 +240,12 @@ def main():
 #####################################################
 def crop_center(pil_img, crop_width, crop_height):
     img_width, img_height = pil_img.size
-    return pil_img.crop(((img_width - crop_width) // 2,
-                         (img_height - crop_height) // 2,
-                         (img_width + crop_width) // 2,
-                         (img_height + crop_height) // 2))
+    pil_img.crop(((img_width - crop_width) // 2,
+                  (img_height - crop_height) // 2,
+                  (img_width + crop_width) // 2,
+                  (img_height + crop_height) // 2))
+    pil_img = pil_img.resize((256,256))
+    return pil_img
 
 def crop_raster(pil_img, canv_size, step_size):
   width, height = pil_img.size
@@ -263,6 +265,7 @@ def crop_raster(pil_img, canv_size, step_size):
     while x + (i * x_step) <= width:
       # ここからが領域に対する画像処理
       crop_image = pil_img.crop((i * x_step, ys, x + (i * x_step), yf))
+      crop?image = crop_image.resize((256, 256))
       #plt.figure()
       #plt.imshow(crop_image)
       # ここまでが領域に対する画像処理
