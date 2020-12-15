@@ -1,6 +1,8 @@
 '''
 Training script for CIFAR-10/100
 Copyright (c) Wei YANG, 2017
+ref
+https://qiita.com/tomo_20180402/items/e8c55bdca648f4877188
 '''
 from __future__ import print_function
 
@@ -152,13 +154,22 @@ def main():
     bird_dataset = datasets.ImageFolder(root = "./",
                                     transform=data_transform)
 ###################################################
+    """
     n_train = int(len(bird_dataset) * 0.6)
-    n_val = len(bird_dataset) *2
+    n_val = len(bird_dataset) *0.2
     n_test = len(bird_dataset) - n_train - n_val
     
     trainset, valset, testset = torch.utils.data.random_split(
         bird_dataset,
         [n_train, n_val, n_test]
+    )
+    """
+    n_train = int(len(bird_dataset) * 0.6)
+    n_val = len(bird_dataset) - n_val
+    
+    trainset, valset, testset = torch.utils.data.random_split(
+        bird_dataset,
+        [n_train, n_val]
     )
 ###################################################
     #trainset = dataloader(root='./data', train=True, download=True, transform=transform_train)
@@ -238,6 +249,12 @@ def main():
 
 #提案手法用
 #####################################################
+"""
+categories = ["001.Black_footed_Albatross","L002.aysan_Albatross","003.Sooty_Albatross","004.Groove_billed_Ani",
+              "005.Crested_Auklet","006.Least_Auklet","007.Parakeet_Auklet","008.Rhinoceros_Auklet",
+              "009.Brewer_Blackbird","010.Red_winged_blackbird","011.Rusty_Blackbird","012.Yellow_headed_Blackbird",
+              "0013.Bobolik"]
+"""
 #center crop
 def crop_center(pil_img, crop_width, crop_height):
     img_width, img_height = pil_img.size
