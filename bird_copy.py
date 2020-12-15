@@ -238,16 +238,23 @@ def main():
 
 #提案手法用
 #####################################################
+#center crop
 def crop_center(pil_img, crop_width, crop_height):
     img_width, img_height = pil_img.size
     pil_img.crop(((img_width - crop_width) // 2,
-                  (img_height - crop_height) // 2,
-                  (img_width + crop_width) // 2,
-                  (img_height + crop_height) // 2))
-    pil_img = pil_img.resize((256,256))
-    return pil_img
+                         (img_height - crop_height) // 2,
+                         (img_width + crop_width) // 2,
+                         (img_height + crop_height) // 2))
+    pil_img = pil_img.resize((224,224))
+    data = np.asarray(pil_img)
+    data = data.tolist()
+    return data
 
+#raster crop
 def crop_raster(pil_img, canv_size, step_size):
+  #global X
+  X = []
+
   width, height = pil_img.size
   x = y = canv_size
   x_step = y_step = step_size
@@ -265,13 +272,56 @@ def crop_raster(pil_img, canv_size, step_size):
     while x + (i * x_step) <= width:
       # ここからが領域に対する画像処理
       crop_image = pil_img.crop((i * x_step, ys, x + (i * x_step), yf))
-      crop?image = crop_image.resize((256, 256))
+      crop_image = pil_img.resize((224,224))
+      n_data = np.asarray(crop_image)
+      X.append(n_data)
       #plt.figure()
       #plt.imshow(crop_image)
       # ここまでが領域に対する画像処理
 
       i = i + 1   # whileループの条件がFalse（横方向の端になる）まで、iを増分
     j = j + 1       # whileループの条件がFalse（縦方向の端になる）まで、jを増分
+  return X
+
+#論文手法　入力画像はそのままなのでtensorなどに変える必要あり？
+#出力(32, 224, 224, 3)
+def paper(pil_img):
+  images_dim = np.zeros((0, 224,224,3))
+  for i in range(3):
+    #一番目
+    if i == 0:
+      d = crop_center(pil_img,224,224)
+      arr_center = np.array(d)
+      arr_center = arr_center[np.newaxis, :, :, :]
+      images_dim = np.append(images_dim, arr_center, axis = 0)
+
+      c = crop_raster(pil_img, 224, 32)
+      arr_raster = np.array(c)
+      images_dim = np.append(images_dim, arr_raster, axis =0)
+    
+    if i == 1:
+      d = crop_center(pil_img,168,168)
+      arr_center = np.array(d)
+      arr_center = arr_center[np.newaxis, :, :, :]
+      images_dim = np.append(images_dim, arr_center, axis = 0)
+
+      c = crop_raster(pil_img, 168, 44)
+      arr_raster = np.array(c)
+      images_dim = np.append(images_dim, arr_raster, axis =0)
+
+    if i == 1:
+      d = crop_center(pil_img,112,112)
+      arr_center = np.array(d)
+      arr_center = arr_center[np.newaxis, :, :, :]
+      images_dim = np.append(images_dim, arr_center, axis = 0)
+
+      c = crop_raster(pil_img, 112, 48)
+      arr_raster = np.array(c)
+      images_dim = np.append(images_dim, arr_raster, axis =0)
+
+  return images_dim
+##################################################################
+
 ##################################################################
 
 def train(trainloader, model, criterion, optimizer, epoch, use_cuda):
